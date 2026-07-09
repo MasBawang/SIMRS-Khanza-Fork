@@ -1,0 +1,31 @@
+name: Auto Sync Upstream to Update Branch
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  sync_with_upstream:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout update branch
+        uses: actions/checkout@v4
+        with:
+          ref: update
+          fetch-depth: 0
+
+      - name: Sync Upstream
+        run: |
+          git config --global user.name 'MasBawang'
+          git config --global user.email 'ramadhanaakmal22@github.com'
+          
+          # GANTI URL DI BAWAH DENGAN URL REPO UTAMA
+          git remote add upstream https://github.com/mas-elkhanza/SIMRS-Khanza.git
+          
+          git fetch upstream
+          git merge upstream/main --allow-unrelated-histories
+          git push origin update
